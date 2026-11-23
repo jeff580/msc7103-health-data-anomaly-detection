@@ -1,6 +1,8 @@
 # Data anomaly detection in health data
 
-This coursework project explores a practical question: can machine learning help health data teams spot records or reporting periods that deserve a closer look? It follows the accepted concept paper while keeping the analysis small enough to explain and reproduce.
+This coursework project explores a practical question: can anomaly scores help health data teams find records or reporting periods that deserve a closer look? It follows the accepted concept paper while keeping the analysis small enough to explain and reproduce. The public datasets are stand-ins for the cloud registry setting; the project does not use a live or national health registry.
+
+**GitHub repository:** https://github.com/jeff580/msc7103-health-data-anomaly-detection
 
 The project has three related parts. The static analysis summarizes vital signs by ICU stay in the eICU demo and compares Isolation Forest with an autoencoder. The dynamic analysis looks for unusual daily changes in reported COVID-19 cases for Uganda and nearby countries. A small labeled ADBench healthcare dataset provides a separate check of how the two models rank known benchmark anomalies. Results from these different datasets should be discussed separately; none proves that a health registry error has been found.
 
@@ -41,9 +43,17 @@ Isolation Forest and the autoencoder produce anomaly scores. They do not produce
 
 For the daily time series, a rolling robust score flags periods that depart from recent reports. Reporting changes, backlogs, missing values, and genuine shifts can all create unusual patterns. A health data manager should review the source and context before deciding what a flag means.
 
+## Results from the current run
+
+All three notebooks ran successfully with the data versions described above. The eICU demo supplied 1,634,960 vital-sign rows, aggregated into 2,375 ICU stays. At a 5% review rate, the MAD baseline, Isolation Forest, and autoencoder each flagged 119 stays. In the held-out synthetic corruption exercise (713 unchanged and 713 altered stays), ROC-AUC / average precision were 0.653 / 0.648 for MAD, 0.676 / 0.601 for Isolation Forest, and 0.813 / 0.801 for the autoencoder. These scores describe the artificial changes used in that exercise only.
+
+On the labeled ADBench annthyroid benchmark, Isolation Forest scored 0.802 ROC-AUC and 0.289 average precision; the autoencoder scored 0.462 and 0.065. At the same 5% flag rate, Isolation Forest precision and recall were 0.367 and 0.247. The autoencoder did not perform well on this dataset. This is a useful result to report honestly, and it shows that one model did not work equally well on both tasks.
+
+The OWID rolling method flagged 119 days for Kenya, 78 for Rwanda, 118 for Tanzania, and 155 for Uganda. These historical flags can reflect reporting changes or genuine shifts as well as data problems. The notebooks contain the detailed tables and figures; do not treat this count as a validated alert rate.
+
 ## Setup and submission
 
-Use the lecturer's report template, include the final GitHub repository link, and prepare a 20-minute presentation. Do not invent results: report the values and figures produced by your own notebook run. Add group members in the report according to the course instructions. Keep student numbers and other personal identifiers out of this public repository.
+Use the lecturer's report template, include the final GitHub repository link, and prepare a 20-minute presentation. The results above came from this run; rerun the notebooks if you change the data or code, then update the report to match. Add group members in the report according to the course instructions. Keep student numbers and other personal identifiers out of this public repository.
 
 ## References
 
