@@ -1,18 +1,18 @@
 # Report outline
 
-Use this outline to fill the lecturer's report template. Write the findings from your own notebook outputs and explain them in your own words.
+Use this outline to fill the lecturer's report template. Check every claim against the notebooks and explain the reasoning in your own words.
 
-1. **Title and group members**
-2. **Abstract** - summarize the problem, three data sources, methods, main results, and conclusion after analysis is complete.
-3. **Problem definition** - describe record-level and reporting-period anomalies and why a health data manager may want a review list. State the project question and the boundary: the system flags unusual data; it does not diagnose patients or prove data errors.
-4. **Dataset selection** - describe the eICU demo, OWID COVID case series, and selected ADBench healthcare subset. Give source, version/date accessed, unit of analysis, relevant columns, data license, and citation for each.
-5. **Data exploration and preprocessing** - describe missingness, duplicate handling, units, selected features, aggregation by ICU stay, date handling, and any exclusions. Explain why each step was needed.
-6. **Methods** - explain Isolation Forest, the autoencoder reconstruction score, and rolling median/MAD for the time-series part. State how scores become flags and why thresholds are practical comparison choices rather than approved operating rules.
-7. **Evaluation** - report the synthetic corruption experiment for eICU, ranking metrics from the labeled ADBench dataset, and the time-series examples. Explain which labels were used only for evaluation and what each evaluation can and cannot support.
-8. **Results** - include actual tables and figures from the completed notebooks. Compare methods on the same dataset; keep results across the three datasets separate.
-9. **Interpretation** - discuss representative flags, whether they may be errors or valid extremes, and what a data manager would check next.
-10. **Limitations and ethics** - cover the small eICU demo sample, no verified eICU error labels, synthetic corruption assumptions, benchmark transfer limits, reporting changes, privacy, and the need for human review.
-11. **Conclusion and future work** - answer the project question based on the evidence; suggest domain review and validation with real registry quality labels.
-12. **References and GitHub link** - include all data and method citations plus the repository URL.
+1. **Title and group members** - use the course format and list the actual contribution of each group member.
+2. **Abstract** - summarize the problem, datasets, methods, most important results, and conclusion after analysis is complete.
+3. **Problem definition** - explain why unusual health records or reporting periods may need review. State the question and clarify that this project flags unusual patterns; it does not diagnose patients or prove data errors.
+4. **Dataset selection** - describe the eICU demo, OWID case series, and ADBench annthyroid subset. State source, version or access date, unit of analysis, columns, license, and citation.
+5. **Exploration and preprocessing** - discuss missingness, measurement ranges, feature choice, aggregation by ICU stay, date handling, and exclusions. Explain how you checked units and retained unusual values pending review.
+6. **Methods and course concepts** - describe the MAD baseline, Isolation Forest, and autoencoder. Then explain Linear Regression, Ridge, Lasso, and SGD regression for forecasting weekly changes; relate regularization to coefficient shrinkage and bias-variance. Explain time-series cross-validation and the weekly-naive comparator. For ADBench, explain Gaussian Naive Bayes assumptions, Decision Tree splits/depth, stratified cross-validation, and the distinction between supervised classifiers and unsupervised scores.
+7. **Evaluation design** - explain the held-out synthetic corruption experiment on eICU, chronological train/test comparison on OWID, and stratified benchmark holdout on ADBench. Specify which labels were used for training and which were reserved for scoring.
+8. **Results** - include actual tables and figures from the completed notebooks. Keep results on the three datasets separate. Report ROC-AUC, average precision, precision/recall at the stated review rate, and regression MAE/RMSE/R-squared where applicable.
+9. **Interpretation and model comparison** - discuss why the autoencoder performed differently across datasets. Explain that the regression models lost to the weekly-naive forecast on the later OWID holdout and what that suggests about generalization/distribution shift. Treat all flags as review candidates.
+10. **Limitations and ethics** - cover the small eICU demo, lack of verified eICU error labels, synthetic corruption assumptions, public-data reporting changes, benchmark transfer limits, class imbalance, privacy, and human review.
+11. **Conclusion and future work** - answer the project question using evidence only. Recommend validation with domain-reviewed data quality labels before any operational use.
+12. **References and GitHub link** - cite all datasets and methods, and include https://github.com/jeff580/msc7103-health-data-anomaly-detection.
 
-Before exporting, replace this outline with the course report template, check every result against the notebook, remove any placeholder text, and save the submitted PDF using the filename convention in the exam instructions.
+Before exporting, replace this outline with the lecturer's report template, remove prompts/placeholders, check every reported value against the final notebook outputs, and save the PDF using the filename convention in the exam instructions.
