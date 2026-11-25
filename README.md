@@ -1,37 +1,36 @@
-# Data anomaly detection in health data
+# Health data anomaly detection
 
-This coursework project asks whether machine-learning methods can help a health data team identify records or reporting periods that deserve a closer look. It follows the accepted concept paper and uses public datasets as practical stand-ins for a health registry. The project does not use a live or national registry, and its flags are not verified errors.
+This project looks at whether machine learning can help a health data team decide which records or reporting days to check first. We use three public datasets to try out the methods in our accepted concept paper. The data are useful for a prototype, but they are not a live Ugandan health registry. A model flag means “please review this”; it does not prove that a record is wrong.
 
-**GitHub repository:** https://github.com/jeff580/msc7103-health-data-anomaly-detection
+**Repository:** https://github.com/jeff580/msc7103-health-data-anomaly-detection
 
-The analysis has three parts. First, vital signs are summarized by ICU stay in the eICU demo and scored with a robust MAD baseline, Isolation Forest, and an autoencoder. Second, daily COVID-19 case reports for Uganda and nearby countries are reviewed with rolling median/MAD scores and a regression comparison. Third, the labeled ADBench annthyroid dataset provides a separate holdout comparison of unsupervised scores and supervised classifiers.
+## What we did
 
-## Connection to course topics
-
-The shared course timetable lists regression topics including linear regression, gradient-based fitting, bias-variance, underfitting and overfitting, Ridge/Lasso regularization, cross-validation, and regression metrics. The time-series notebook applies Linear Regression, Ridge, Lasso, and SGD regression to forecast week-to-week changes. It uses an expanding time-series split, compares against a weekly-naive forecast, and reports MAE, RMSE, and R-squared. The results also show why a model must be compared with a simple baseline: the regressions did not generalize as well as the weekly-naive forecast on the later holdout.
-
-The benchmark notebook adds Gaussian Naive Bayes and a Decision Tree as supervised classification comparisons alongside the unsupervised methods. It uses stratified cross-validation for model selection and keeps a final test partition aside. These labels belong to the benchmark only; they are not labels for eICU or local health registry errors.
+The project has three parts. In the eICU demo, we combine repeated vital sign readings into one summary for each ICU stay and score unusual stays. For COVID-19 reports from Uganda, Kenya, Rwanda, and Tanzania, we look for days that differ from recent reports and compare regression forecasts with a simple forecast based on the previous week. Finally, we use ADBench's labelled annthyroid dataset to compare anomaly scores with supervised classifiers. We report each part separately because the datasets and evaluation questions are different.
 
 ## Notebooks
 
-- `01_static_eicu.ipynb` - data exploration, aggregation by ICU stay, MAD/Isolation Forest/autoencoder scores, and a held-out synthetic corruption experiment.
-- `02_dynamic_owid.ipynb` - daily case series, a rolling robust score, and time-ordered regression forecasting with a weekly-naive baseline.
-- `03_adbench_validation.ipynb` - held-out benchmark comparison of MAD, Isolation Forest, an autoencoder, Gaussian Naive Bayes, and a Decision Tree.
-- `report_outline.md` - prompts for completing the lecturer-provided report template.
+- `01_static_eicu.ipynb` - prepares the eICU vital sign data, summarizes it by stay, and compares MAD, Isolation Forest, and an autoencoder. It also tests whether the methods rank deliberately altered examples as unusual.
+- `02_dynamic_owid.ipynb` - reviews daily case reports using a rolling MAD score and compares four regression methods with a previous week forecast.
+- `03_adbench_validation.ipynb` - compares unsupervised anomaly scores with Gaussian Naive Bayes and a Decision Tree on a labelled benchmark.
 
-## Data setup
+The notebooks also show course ideas such as robust statistics, regression, regularization with Ridge and Lasso, gradient based fitting with SGD, cross validation, train and test splits, and model evaluation. The benchmark notebook illustrates the difference between supervised learning, which uses training labels, and unsupervised scoring, which does not.
 
-Download each dataset from its source and place the files at these paths. The `.gitignore` excludes `data/`, so raw data are not added to this public repository.
+## Data sources
+
+Download the data from the sources below and save the files at the listed paths. The raw data folder is excluded from this public repository, so the datasets are not uploaded here.
 
 | Dataset | File expected | Source |
 |---|---|---|
 | eICU demo v2.0 | `data/eicu/vitalPeriodic.csv.gz` | [PhysioNet eICU demo](https://physionet.org/content/eicu-crd-demo/2.0/) |
-| OWID COVID cases and deaths | `data/owid/cases_deaths.csv` | [OWID COVID data and metadata](https://docs.owid.io/projects/etl/api/covid/) |
-| ADBench annthyroid | `data/adbench/2_annthyroid.npz` | [Official ADBench repository](https://github.com/Minqi824/ADBench), `adbench/datasets/Classical/` |
+| OWID COVID-19 cases and deaths | `data/owid/cases_deaths.csv` | [Our World in Data COVID-19 data](https://docs.owid.io/projects/etl/api/covid/) |
+| ADBench annthyroid | `data/adbench/2_annthyroid.npz` | [ADBench repository](https://github.com/Minqi824/ADBench), `adbench/datasets/Classical/` |
 
-For each download, check the license and citation requirements. Do not commit source data. The eICU demo is deidentified and open access under its stated license; use the demo rather than the full credentialed eICU database.
+Please check the source pages for current access and citation terms. The eICU demo is deidentified; this is the demo dataset, not the full credentialed eICU database.
 
-## Run the notebooks
+## Set up and run
+
+From the project folder, create a Python environment, install the listed packages, and start Jupyter:
 
 ```bash
 python -m venv .venv
@@ -41,32 +40,24 @@ python -m pip install -r requirements.txt
 jupyter lab
 ```
 
-Open the notebooks in numerical order and run each from top to bottom. The notebooks expect the data paths in the table above. Public data releases can change, so check the printed columns and metadata against the current data file before interpreting results.
+Open the notebooks in order and run each from top to bottom after placing the data files in the locations above. Public datasets can be updated, so the exact results may change if a newer data release is used.
 
-## Methods and interpretation
+## What the results tell us
 
-The eICU analysis has no verified labels for data errors. Its synthetic exercise adds a controlled feature shift to held-out stays and checks whether scores rank altered rows above unchanged rows. It evaluates the artificial changes, not clinical validity.
+**eICU demo.** We summarized 1,634,960 vital sign readings into 2,375 ICU stays. At a 5% review limit, each scoring method selected 119 stays. In the experiment with deliberately altered examples, ROC-AUC and average precision were 0.653 and 0.648 for MAD, 0.676 and 0.601 for Isolation Forest, and 0.813 and 0.801 for the autoencoder. These scores describe how the methods ranked the artificial changes we introduced. They do not measure detection of confirmed clinical errors.
 
-For the time series, rolling MAD compares each day with recent reports. The regression models forecast the weekly change from lagged values and then compare with a one-week-naive forecast. In the current holdout, none of the selected regressions beat the weekly-naive baseline, and test R-squared was negative in all four countries. Regression residual flags should therefore be treated as an unsuccessful comparison in this run, not as validated alerts. The rolling MAD flags also need a human to check reporting notes and context.
+**COVID-19 reports.** The rolling MAD method flagged 119 days in Kenya, 78 in Rwanda, 118 in Tanzania, and 155 in Uganda. In the later test period, the regression forecasts had higher MAE than the previous week forecast in all four countries, and their test R squared values were negative. In this run, the more complex forecasts did not improve on the simple baseline. Eighteen regression residuals were flagged for Tanzania and none for the other countries; these have not been checked against verified error labels.
 
-On ADBench, the supervised classifiers use training labels; the unsupervised models do not. All metrics are calculated on a separate test partition. This benchmark measures performance on annthyroid only and cannot establish performance on real registry errors.
+**ADBench annthyroid.** The test set had 2,160 rows, of which 7.41% were labelled anomalies. The Decision Tree had ROC-AUC 0.985 and average precision 0.868. At a 5% review limit, its precision was 0.887 and recall was 0.638. These results apply to annthyroid and should not be taken as evidence that the model will perform the same way on registry data.
 
-## Results from the current run
+There is no single accuracy score for the whole project: each dataset answers a different question. The detailed outputs and plots are in the notebooks. Please check the final notebook results before quoting any numbers in the report or presentation.
 
-**eICU demo:** 1,634,960 vital-sign rows were aggregated into 2,375 ICU stays. At a 5% review rate, each of the three scoring methods flagged 119 stays. In the held-out synthetic experiment (713 unchanged and 713 altered stays), ROC-AUC / average precision were 0.653 / 0.648 for MAD, 0.676 / 0.601 for Isolation Forest, and 0.813 / 0.801 for the autoencoder. These figures concern only the artificial changes used in this exercise.
+## Report and presentation
 
-**OWID time series:** the rolling MAD method flagged 119 days for Kenya, 78 for Rwanda, 118 for Tanzania, and 155 for Uganda. Each country had 493 later-period test days for regression. The selected models were Linear Regression for Kenya and Lasso for Rwanda, Tanzania, and Uganda. Their test MAE values were 0.0296, 0.0500, 0.0526, and 0.0982 cases per million, while the weekly-naive MAE values were 0.0009, 0.0009, 0.0048, and 0.0023. The regression forecasts did not generalize well to this later period; negative test R-squared values reinforce that result. Eighteen regression residuals were flagged for Tanzania and none for the other countries, but these flags are not validated alerts.
-
-**ADBench annthyroid:** the stratified holdout had 2,160 test rows and a 7.41% anomaly share. Decision Tree achieved ROC-AUC 0.985 and average precision 0.868; Gaussian Naive Bayes scored 0.908 and 0.639. MAD scored 0.953 and 0.651, Isolation Forest 0.820 and 0.333, and the autoencoder 0.451 and 0.063. At a fixed 5% review rate, Decision Tree precision and recall were 0.887 and 0.638. The selected unbounded tree had a higher training cross-validation score than validation/test score, so discuss possible overfitting and the benchmark's limited transferability.
-
-Keep results from the three datasets separate. The notebooks contain detailed tables and plots; report only what the run produced and do not describe the counts as a validated alert rate.
-
-## Setup and submission
-
-Use the lecturer's report template, include the final GitHub repository link, and prepare a 20-minute presentation. Replace the report outline with the provided template before submission. Add group members and their actual contributions according to the course instructions. Keep student numbers and other personal identifiers out of this public repository.
+The `report` folder contains the current report files. Use the course template and check its instructions before submission. Add the group members' names and only describe contributions that both members agree are accurate. Include the repository link in the submitted report. Do not put student numbers or other private identifiers in this public repository.
 
 ## References
 
-- Johnson, A., Pollard, T., Badawi, O., & Raffa, J. (2019). *eICU Collaborative Research Database Demo (version 2.0).* PhysioNet. https://doi.org/10.13026/gxmm-es70
-- Our World in Data. COVID-19 data documentation. https://docs.owid.io/projects/etl/api/covid/
-- Han, S., Hu, X., Huang, H., Jiang, M., & Zhao, Y. (2022). *ADBench: Anomaly Detection Benchmark.* NeurIPS. https://github.com/Minqi824/ADBench
+- Johnson, A., Pollard, T., Badawi, O., and Raffa, J. (2019). *eICU Collaborative Research Database Demo (version 2.0).* PhysioNet. https://doi.org/10.13026/gxmm-es70
+- Our World in Data. *COVID-19 data documentation.* https://docs.owid.io/projects/etl/api/covid/
+- Han, S., Hu, X., Huang, H., Jiang, M., and Zhao, Y. (2022). *ADBench: Anomaly Detection Benchmark.* NeurIPS. https://github.com/Minqi824/ADBench
