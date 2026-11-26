@@ -1,6 +1,6 @@
 # Health data anomaly detection
 
-This project looks at whether machine learning can help a health data team decide which records or reporting days to check first. We use three public datasets to try out the methods in our accepted concept paper. The data are useful for a prototype, but they are not a live Ugandan health registry. A model flag means “please review this”; it does not prove that a record is wrong.
+This project looks at whether machine learning can help a health data team decide which records or reporting days to check first. We use three public datasets to evaluate the methods proposed in our concept paper. The data are useful for a prototype, but they are not a live Ugandan health registry. A model flag means “please review this”; it does not prove that a record is wrong.
 
 **Repository:** https://github.com/jeff580/msc7103-health-data-anomaly-detection
 
@@ -10,11 +10,11 @@ The project has three parts. In the eICU demo, we combine repeated vital sign re
 
 ## Notebooks
 
-- `01_static_eicu.ipynb` - prepares the eICU vital sign data, summarizes it by stay, and compares MAD, Isolation Forest, and an autoencoder. It also tests whether the methods rank deliberately altered examples as unusual.
-- `02_dynamic_owid.ipynb` - reviews daily case reports using a rolling MAD score and compares four regression methods with a previous week forecast.
-- `03_adbench_validation.ipynb` - compares unsupervised anomaly scores with Gaussian Naive Bayes and a Decision Tree on a labelled benchmark.
+- `01_static_eicu.ipynb` prepares the eICU vital sign data, summarizes it by stay, and compares MAD, Isolation Forest, and an autoencoder. It also tests whether the methods rank deliberately altered examples as unusual.
+- `02_dynamic_owid.ipynb` reviews daily case reports using a rolling MAD score and compares four regression methods with a previous week forecast.
+- `03_adbench_validation.ipynb` compares unsupervised anomaly scores with Gaussian Naive Bayes and a Decision Tree on a labelled benchmark.
 
-The notebooks also show course ideas such as robust statistics, regression, regularization with Ridge and Lasso, gradient based fitting with SGD, cross validation, train and test splits, and model evaluation. The benchmark notebook illustrates the difference between supervised learning, which uses training labels, and unsupervised scoring, which does not.
+Across the notebooks, we use robust statistics, regression, Ridge and Lasso regularization, SGD fitting, cross validation, train and test splits, and evaluation measures. The benchmark notebook also shows the difference between supervised learning, which uses training labels, and unsupervised scoring, which does not.
 
 ## Data sources
 
@@ -54,7 +54,7 @@ There is no single accuracy score for the whole project: each dataset answers a 
 
 ## Report and presentation
 
-The final report is a separate course deliverable. Use the course template and check its instructions before submission. Include the repository link in the report. Add group member or contribution details only where the course template or instructions ask for them, and make sure the details are accurate. Do not put student numbers or other private identifiers in this public repository.
+The `report` folder contains the current report files. Use the report template and check its instructions before submission. Add the group members' names and only describe contributions that both members agree are accurate. Include the repository link in the submitted report. Do not put student numbers or other private identifiers in this public repository.
 
 ## References
 
