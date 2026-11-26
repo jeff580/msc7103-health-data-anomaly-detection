@@ -54,7 +54,7 @@ There is no single accuracy score for the whole project: each dataset answers a 
 
 ## Report and presentation
 
-The `report` folder contains the current report files. Use the report template and check its instructions before submission. Add the group members' names and only describe contributions that both members agree are accurate. Include the repository link in the submitted report. Do not put student numbers or other private identifiers in this public repository.
+The final report is submitted separately. Use the report template and check its instructions before submission. Include the repository link in the report. Add group member or contribution details only if the template or assignment asks for them, and make sure the details are accurate. Do not put student numbers or other private identifiers in this public repository.
 
 ## References
 
