@@ -1,8 +1,12 @@
-# Health data anomaly detection
+# Using Machine Learning to Find Unusual Patterns in Health Data
 
 This project looks at whether machine learning can help a health data team decide which records or reporting days to check first. We use three public datasets to evaluate the methods proposed in our concept paper. The data are useful for a prototype, but they are not a live Ugandan health registry. A model flag means “please review this”; it does not prove that a record is wrong.
 
 **Repository:** https://github.com/jeff580/msc7103-health-data-anomaly-detection
+
+## Problem statement
+
+Health teams may have many records and reports to review, making it difficult to spot unusual values or changes and decide what to check first. We ask whether machine learning can rank unusual patterns in health data to help prioritize records or reporting days for human review. The public datasets support a prototype; a high score is not proof of an error or a diagnosis, and this work does not validate or deploy a live Ugandan registry.
 
 ## What we did
 
@@ -34,8 +38,8 @@ From the project folder, create a Python environment, install the listed package
 
 ```bash
 python -m venv .venv
-# Windows: .venv\Scripts\activate
-# macOS/Linux: source .venv/bin/activate
+# Using Machine Learning to Find Unusual Patterns in Health Data
+# Using Machine Learning to Find Unusual Patterns in Health Data
 python -m pip install -r requirements.txt
 jupyter lab
 ```
